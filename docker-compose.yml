@@ -1,0 +1,77 @@
+version: '3'
+
+#Laravel Framework 7.30.4
+#mysql 5.7
+services:
+  backend:
+    container_name: lumen
+    build: ./docker/php
+    volumes:
+    - ./var/www/backend:/var/www/backend
+    #ports:
+    #  - 8000:8000
+    ports:
+    - 80:80
+    working_dir: /var/www/backend
+    #このコマンドにより立てる時にサーバーを立ててくれる。
+    #command: "php -S 0.0.0.0:8000 -t public"
+
+
+  lumennginx:
+    image: nginx
+    container_name: lumennginx
+    ports:
+    - 8000:8000
+    volumes:
+    - ./var/www/backend:/var/www/backend
+    - ./docker/nginx/lumen/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+    - backend
+
+
+  #react用のコンテナ
+  frontend:
+    build: ./Docker/react
+    container_name: react
+    tty: true
+    environment:
+      - NODE_ENV=production
+    #ここのvolumeでfrontだけでなくbackも入れる必要性とは。何かあるのかもしれない。
+    #reactのプロジェクトがなければ考えてcreate-react-appをしないといけない．逆にある状態だったら必要なのだろうか？？
+    volumes:
+    - ./var/www/frontend:/var/www/frontend
+    ports:
+    - "3000:3000"
+    working_dir: /var/www/frontend
+    #command: sh -c "yarn start"
+    #これを使う（少し待つ）
+    #command: "npm start"
+
+
+  reactnginx:
+    image: nginx
+    container_name: reactnginx
+    ports:
+    - 8080:800
+    volumes:
+    - ./var/www/frontend:/var/www/frontend
+    - ./docker/nginx/react/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+    - frontend
+
+  db:
+    image: mysql:5.7
+    container_name: db-host
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+    - ./docker/db/data:/var/lib/mysql
+    - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+    - ./docker/db/sql:/docker-entrypoint-initdb.d
+    ports:
+    - 3306:3306
