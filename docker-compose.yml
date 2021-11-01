@@ -8,12 +8,13 @@ services:
     build: ./docker/php
     volumes:
     - ./var/www/backend:/var/www/backend
+    #nginx無しの時
     #ports:
     #  - 8000:8000
     ports:
     - 80:80
     working_dir: /var/www/backend
-    #このコマンドにより立てる時にサーバーを立ててくれる。
+    #nginx無しの時
     #command: "php -S 0.0.0.0:8000 -t public"
 
 
@@ -36,15 +37,12 @@ services:
     tty: true
     environment:
       - NODE_ENV=production
-    #ここのvolumeでfrontだけでなくbackも入れる必要性とは。何かあるのかもしれない。
-    #reactのプロジェクトがなければ考えてcreate-react-appをしないといけない．逆にある状態だったら必要なのだろうか？？
     volumes:
     - ./var/www/frontend:/var/www/frontend
     ports:
     - "3000:3000"
     working_dir: /var/www/frontend
-    #command: sh -c "yarn start"
-    #これを使う（少し待つ）
+    #nginx無しの時（少し待つ）
     #command: "npm start"
 
 
