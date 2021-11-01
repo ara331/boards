@@ -1,0 +1,14 @@
+#FROM node:14.13.1 
+FROM node:16.11.0
+WORKDIR /var/www/frontend
+RUN npm install --save prop-types
+RUN npm install -g create-react-app
+RUN npm install react-cookie
+RUN npm install axios --save
+#RUN yarn
+#RUN yarn add react-router-dom
+# Copy all files from app
+#COPY --chown=www-data:www-data var/www/frontend. /var/www/frontend
+#RUN yarn
+#RUN yarn build
+#CMD ["nginx", "-g", "daemon off;"]

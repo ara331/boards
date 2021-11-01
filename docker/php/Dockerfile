@@ -1,0 +1,33 @@
+
+FROM php:7.2-fpm
+COPY php.ini /usr/local/etc/php/
+
+RUN apt-get update \
+  && apt-get install -y zlib1g-dev mariadb-client \
+  && docker-php-ext-install zip pdo_mysql
+
+#Composer install
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+
+ENV COMPOSER_ALLOW_SUPERUSER 1
+
+ENV COMPOSER_HOME /composer
+
+ENV PATH $PATH:/composer/vendor/bin
+
+WORKDIR /var/www
+#WORKDIR /var/www/backend
+
+RUN composer global require "laravel/installer"
+
+#なんかしらんけど、これをやらないとうまくいかないみたい。→実行できなかったからやっぱだめ
+#RUN composer install
+
+#よくわからんけど、ログイン管理のために必要だと思った。
+#結局今の段階では必要としていない。
+RUN composer require lcobucci/jwt=3.3.*
+
+#メールを送るのに必要みたい。とりあえず使ってみる。
+#RUN composer require phpmailer/phpmailer→失敗。
+#つぎはこっち。
+RUN composer require illuminate/mail
