@@ -23,11 +23,4 @@ RUN composer global require "laravel/installer"
 #なんかしらんけど、これをやらないとうまくいかないみたい。→実行できなかったからやっぱだめ
 #RUN composer install
 
-#よくわからんけど、ログイン管理のために必要だと思った。
-#結局今の段階では必要としていない。
-RUN composer require lcobucci/jwt=3.3.*
-
-#メールを送るのに必要みたい。とりあえず使ってみる。
-#RUN composer require phpmailer/phpmailer→失敗。
-#つぎはこっち。
 RUN composer require illuminate/mail
