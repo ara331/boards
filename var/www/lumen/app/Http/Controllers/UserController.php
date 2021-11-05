@@ -69,7 +69,7 @@ class UserController
     public function login(Request $request){
         $id = $request[0];
         $pass = $request[1];
-        $user= DB::table('user')->where('id',$id)->where('pass',$pass)->where('kari', '!=', -1)->first();
+        $user= DB::table('user')->where('id',$id)->where('pass',$pass)->where('kari', 0)->first();
         if ($user){
             //cookieとセッションを使ってうまくやろうと思ったけど分からなかった。
             $data=[1,$id,$user->name];
