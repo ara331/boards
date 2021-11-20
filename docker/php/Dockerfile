@@ -15,12 +15,6 @@ ENV COMPOSER_HOME /composer
 
 ENV PATH $PATH:/composer/vendor/bin
 
-WORKDIR /var/www
-#WORKDIR /var/www/backend
+WORKDIR /var/www/backend
 
 RUN composer global require "laravel/installer"
-
-#なんかしらんけど、これをやらないとうまくいかないみたい。→実行できなかったからやっぱだめ
-#RUN composer install
-
-RUN composer require illuminate/mail
